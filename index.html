@@ -39,8 +39,8 @@ footer{text-align:center;color:#64748b;font-size:13px;padding:0 18px 30px}
 <main class="wrap">
 <section class="card score">
   <div class="scoreline">Titans <span>20</span> — <span>24</span> Dolphins</div>
-  <div class="count" id="count">0</div>
-  <div class="small">people who signed</div>
+  <div class="count" id="count">—</div>
+  <div class="small">signatures collected online</div>
 </section>
 
 <section class="card">
@@ -56,9 +56,9 @@ footer{text-align:center;color:#64748b;font-size:13px;padding:0 18px 30px}
   <h2>✍️ Sign the petition</h2>
   <form id="petitionForm">
     <label for="name">Your name</label>
-    <input id="name" maxlength="80" required placeholder="Enter your name">
+    <input id="name" name="name" maxlength="80" required placeholder="Enter your name">
     <label for="reason">Why do you think the Titans won? (optional)</label>
-    <input id="reason" maxlength="200" placeholder="Write your reason...">
+    <input id="reason" name="reason" maxlength="200" placeholder="Write your reason...">
     <button type="submit">🏉 I THINK THE TITANS WON!</button>
     <div class="success" id="success">You're signed! 🏉 Up the Titans!</div>
   </form>
@@ -73,25 +73,54 @@ footer{text-align:center;color:#64748b;font-size:13px;padding:0 18px 30px}
 
 <footer>
   This is a fan-made petition and does not change the official match result.
-  Signatures on this version are saved only in the browser/device being used.
+  Signatures are submitted online through the petition form service.
 </footer>
 
 <script>
-const KEY="titansPetition2026";
-let signatures=JSON.parse(localStorage.getItem(KEY)||"[]");
-const count=document.getElementById("count");
-count.textContent=signatures.length;
+// FORMSpree setup: replace YOUR_FORM_ID with the ID from your Formspree form.
+const FORMSPREE_ENDPOINT="https://formspree.io/f/xkjnzklp";
 
-document.getElementById("petitionForm").addEventListener("submit",e=>{
+const form=document.getElementById("petitionForm");
+const button=form.querySelector("button[type=submit]");
+const success=document.getElementById("success");
+
+form.addEventListener("submit",async e=>{
   e.preventDefault();
   const name=document.getElementById("name").value.trim();
   const reason=document.getElementById("reason").value.trim();
   if(!name)return;
-  signatures.push({name,reason,date:new Date().toISOString()});
-  localStorage.setItem(KEY,JSON.stringify(signatures));
-  count.textContent=signatures.length;
-  e.target.reset();
-  document.getElementById("success").style.display="block";
+
+  if(FORMSPREE_ENDPOINT.includes("YOUR_FORM_ID")){
+    alert("The petition form is almost ready! Add your Formspree form ID in the code first.");
+    return;
+  }
+
+  button.disabled=true;
+  button.textContent="Submitting…";
+
+  try{
+    const response=await fetch(FORMSPREE_ENDPOINT,{
+      method:"POST",
+      headers:{"Accept":"application/json","Content-Type":"application/json"},
+      body:JSON.stringify({
+        name,
+        reason,
+        petition:"Gold Coast Titans — Round 27, 2026",
+        _subject:"New Titans Round 27 petition signature"
+      })
+    });
+
+    if(!response.ok) throw new Error("Submission failed");
+
+    form.reset();
+    success.textContent="You're signed! 🏉 Up the Titans!";
+    success.style.display="block";
+  }catch(error){
+    alert("Sorry — your signature could not be submitted. Please try again.");
+  }finally{
+    button.disabled=false;
+    button.textContent="🏉 I THINK THE TITANS WON!";
+  }
 });
 
 document.getElementById("shareBtn").addEventListener("click",async()=>{
