@@ -1,143 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Did the Titans Win? — Round 27, 2026</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f2f4f7;color:#111827}
-.hero{background:linear-gradient(135deg,#07152b,#123b78);color:#fff;text-align:center;padding:48px 18px 58px}
-.badge{display:inline-block;background:#fff;color:#123b78;padding:7px 13px;border-radius:999px;font-weight:800;font-size:13px;margin-bottom:15px}
-h1{font-size:clamp(30px,7vw,52px);line-height:1.05;margin:0 auto 14px;max-width:850px}
-.hero p{font-size:18px;max-width:720px;margin:auto;line-height:1.5}
-.wrap{max-width:850px;margin:-28px auto 45px;padding:0 16px}
-.card{background:#fff;border-radius:20px;padding:26px;margin-bottom:18px;box-shadow:0 8px 25px rgba(0,0,0,.09)}
-.score{text-align:center}
-.scoreline{font-size:22px;font-weight:800;margin-bottom:12px}
-.scoreline span{padding:0 8px}
-.count{font-size:50px;font-weight:900;color:#123b78}
-.small{color:#64748b}
-h2{margin-top:0}
-.story{font-size:17px;line-height:1.65;color:#374151}
-form label{display:block;font-weight:800;margin:15px 0 7px}
-input{width:100%;padding:14px;border:1px solid #cbd5e1;border-radius:11px;font-size:16px}
-button{width:100%;padding:16px;border:0;border-radius:11px;background:#123b78;color:white;font-size:17px;font-weight:900;cursor:pointer;margin-top:18px}
-button:hover{background:#0b2a58}
-.success{display:none;margin-top:14px;padding:12px;border-radius:10px;background:#dcfce7;color:#166534;text-align:center;font-weight:700}
-.share button{background:#111827}
-footer{text-align:center;color:#64748b;font-size:13px;padding:0 18px 30px}
-</style>
-</head>
-<body>
-<section class="hero">
-  <div class="badge">🏉 ROUND 27 • 2026</div>
-  <h1>DO YOU THINK THE GOLD COAST TITANS WON?</h1>
-  <p>Sign the petition if you think the Titans won against the Dolphins in Round 27, 2026!</p>
-</section>
-
-<main class="wrap">
-<section class="card score">
-  <div class="scoreline">Titans <span>20</span> — <span>24</span> Dolphins</div>
-  <div class="count" id="count">—</div>
-  <div class="small">signatures collected online</div>
-</section>
-
-<section class="card">
-  <h2>📣 The Petition</h2>
-  <div class="story">
-    We know the official scoreboard says the Dolphins won 24–20, but this petition is for every Titans fan who thinks the Gold Coast deserved the win.
-    <br><br>
-    If you think the <strong>Gold Coast Titans won</strong>, even if the official result says otherwise, add your name below and show your support!
-  </div>
-</section>
-
-<section class="card">
-  <h2>✍️ Sign the petition</h2>
-  <form id="petitionForm">
-    <label for="name">Your name</label>
-    <input id="name" name="name" maxlength="80" required placeholder="Enter your name">
-    <label for="reason">Why do you think the Titans won? (optional)</label>
-    <input id="reason" name="reason" maxlength="200" placeholder="Write your reason...">
-    <button type="submit">🏉 I THINK THE TITANS WON!</button>
-    <div class="success" id="success">You're signed! 🏉 Up the Titans!</div>
-  </form>
-</section>
-
-<section class="card share">
-  <h2>📤 Share it</h2>
-  <p>Send the petition to your friends and see how many Titans fans agree.</p>
-  <button id="shareBtn">Share Petition</button>
-</section>
-</main>
-
-<footer>
-  This is a fan-made petition and does not change the official match result.
-  Signatures are submitted online through the petition form service.
-</footer>
-
 <script>
-// FORMSpree setup: replace YOUR_FORM_ID with the ID from your Formspree form.
-const FORMSPREE_ENDPOINT="https://formspree.io/f/xkjnzklp";
+  // Your other JavaScript code goes above this...
 
-const form=document.getElementById("petitionForm");
-const button=form.querySelector("button[type=submit]");
-const success=document.getElementById("success");
-
-form.addEventListener("submit",async e=>{
-  e.preventDefault();
-  const name=document.getElementById("name").value.trim();
-  const reason=document.getElementById("reason").value.trim();
-  if(!name)return;
-
-  if(FORMSPREE_ENDPOINT.includes("YOUR_FORM_ID")){
-    alert("The petition form is almost ready! Add your Formspree form ID in the code first.");
-    return;
+  try {
+    // Your existing share code goes here
+  } catch(e) {
+    alert("Copy the page link from your browser to share it.");
   }
 
-  button.disabled=true;
-  button.textContent="Submitting…";
+  const SIGNED_KEY = "titansRound27Signed";
+  const COUNT_KEY = "titansRound27LocalCount";
+  const SUBMIT_LOCK_KEY = "titansRound27SubmitLock";
 
-  try{
-    const response=await fetch(FORMSPREE_ENDPOINT,{
-      method:"POST",
-      headers:{"Accept":"application/json","Content-Type":"application/json"},
-      body:JSON.stringify({
-        name,
-        reason,
-        petition:"Gold Coast Titans — Round 27, 2026",
-        _subject:"New Titans Round 27 petition signature"
-      })
-    });
+  // Your other JavaScript code can continue here...
 
-    if(!response.ok) throw new Error("Submission failed");
-
-    form.reset();
-    success.textContent="You're signed! 🏉 Up the Titans!";
-    success.style.display="block";
-  }catch(error){
-    alert("Sorry — your signature could not be submitted. Please try again.");
-  }finally{
-    button.disabled=false;
-    button.textContent="🏉 I THINK THE TITANS WON!";
-  }
-});
-
-document.getElementById("shareBtn").addEventListener("click",async()=>{
-  if(navigator.share){
-    await navigator.share({
-      title:"Did the Titans Win? — Round 27, 2026",
-      text:"Sign if you think the Gold Coast Titans won against the Dolphins!",
-      url:location.href
-    });
-  }else{
-    try{
-      await navigator.clipboard.writeText(location.href);
-      alert("Petition link copied!");
-    }catch(e){alert("Copy the page link from your browser to share it.");}
-  }
-});
 </script>
+
 </body>
 </html>
-    <!-- Pages refresh -->
