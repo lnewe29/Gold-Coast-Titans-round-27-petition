@@ -126,6 +126,11 @@ button:hover{
   background:#0b2a58;
 }
 
+button:disabled{
+  opacity:.65;
+  cursor:not-allowed;
+}
+
 .success{
   display:none;
   margin-top:14px;
@@ -153,423 +158,492 @@ footer{
 <body>
 
 <section class="hero">
-  <div class="badge">🏉 ROUND 27 • 2026</div>
 
-  <h1>DO YOU THINK THE GOLD COAST TITANS WON?</h1>
+<div class="badge">🏉 ROUND 27 • 2026</div>
 
-  <p>
-    Sign the petition if you think the Titans won against the Dolphins in Round 27, 2026!
-  </p>
+<h1>DO YOU THINK THE GOLD COAST TITANS WON?</h1>
+
+<p>
+Sign the petition if you think the Titans won against the Dolphins in Round 27, 2026!
+</p>
+
 </section>
 
 <main class="wrap">
 
 <section class="card score">
-  <div class="scoreline">
-    Titans <span>20</span> — <span>24</span> Dolphins
-  </div>
 
-  <div class="count" id="count">0</div>
+<div class="scoreline">
+Titans <span>20</span> — <span>24</span> Dolphins
+</div>
 
-  <div class="small">
-    This browser can submit one signature. The petition service receives the submission.
-  </div>
+<div class="count" id="count">—</div>
+
+<div class="small">
+signatures collected online
+</div>
+
 </section>
+
 
 <section class="card">
 
-  <h2>📣 The Petition</h2>
+<h2>📣 The Petition</h2>
 
-  <div class="story">
+<div class="story">
 
-    We know the official scoreboard says the Dolphins won 24–20,
-    but this petition is for every Titans fan who thinks the Gold Coast deserved the win.
+We know the official scoreboard says the Dolphins won 24–20, but this petition is for every Titans fan who thinks the Gold Coast deserved the win.
 
-    <br><br>
+<br><br>
 
-    If you think the <strong>Gold Coast Titans won</strong>,
-    even if the official result says otherwise, add your name below and show your support!
+If you think the <strong>Gold Coast Titans won</strong>, even if the official result says otherwise, add your name below and show your support!
 
-  </div>
+</div>
 
 </section>
+
 
 <section class="card">
 
-  <h2>✍️ Sign the petition</h2>
+<h2>✍️ Sign the petition</h2>
 
-  <form id="petitionForm">
+<form id="petitionForm">
 
-    <label for="name">Your name</label>
+<label for="name">Your name</label>
 
-    <input
-      id="name"
-      name="name"
-      maxlength="80"
-      required
-      placeholder="Enter your name"
-    >
+<input
+  id="name"
+  name="name"
+  maxlength="80"
+  required
+  placeholder="Enter your name"
+>
 
-    <label for="reason">
-      Why do you think the Titans won? (optional)
-    </label>
+<label for="reason">
+Why do you think the Titans won? (optional)
+</label>
 
-    <input
-      id="reason"
-      name="reason"
-      maxlength="200"
-      placeholder="Write your reason..."
-    >
+<input
+  id="reason"
+  name="reason"
+  maxlength="200"
+  placeholder="Write your reason..."
+>
 
-    <!-- Hidden anti-spam field -->
-    <input
-      id="website"
-      name="website"
-      tabindex="-1"
-      autocomplete="off"
-      aria-hidden="true"
-      style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0"
-    >
+<button type="submit">
+🏉 I THINK THE TITANS WON!
+</button>
 
-    <button type="submit">
-      🏉 I THINK THE TITANS WON!
-    </button>
+<div class="success" id="success">
+You're signed! 🏉 Up the Titans!
+</div>
 
-    <div class="success" id="success">
-      You're signed! 🏉 Up the Titans!
-    </div>
-
-  </form>
+</form>
 
 </section>
+
 
 <section class="card share">
 
-  <h2>📤 Share it</h2>
+<h2>📤 Share it</h2>
 
-  <p>
-    Send the petition to your friends and see how many Titans fans agree.
-  </p>
+<p>
+Send the petition to your friends and see how many Titans fans agree.
+</p>
 
-  <button id="shareBtn">
-    Share Petition
-  </button>
+<button id="shareBtn">
+Share Petition
+</button>
 
 </section>
 
 </main>
 
+
 <footer>
-  This is a fan-made petition and does not change the official match result.
-  Signatures are submitted online through the petition form service.
+
+This is a fan-made petition and does not change the official match result.
+
+<br><br>
+
+One signature is allowed per device/browser.
+
 </footer>
+
 
 <script>
 
-// =====================================================
-// FORMspree setup
-// =====================================================
+/* =========================
+   FORMspree
+========================= */
 
 const FORMSPREE_ENDPOINT =
-  "https://formspree.io/f/xkjnzklp";
+"https://formspree.io/f/xkjnzklp";
 
 
-// =====================================================
-// Storage keys
-// =====================================================
+/* =========================
+   SUPABASE
+========================= */
+
+const SUPABASE_URL =
+"https://xynvdftvuwtuvezdnoyz.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+"sb_publishable_qbjGr_YjjqzqoML5UV5jVw_1e0v607Q";
+
+
+/* =========================
+   LOCAL DEVICE PROTECTION
+========================= */
 
 const SIGNED_KEY =
-  "titansRound27Signed";
-
-const COUNT_KEY =
-  "titansRound27LocalCount";
-
-const SUBMIT_LOCK_KEY =
-  "titansRound27SubmitLock";
+"titansRound27Signed";
 
 
-// =====================================================
-// Get page elements
-// =====================================================
+/* =========================
+   ELEMENTS
+========================= */
 
 const form =
-  document.getElementById("petitionForm");
+document.getElementById("petitionForm");
 
 const button =
-  form.querySelector("button[type=submit]");
+form.querySelector("button[type=submit]");
 
 const success =
-  document.getElementById("success");
+document.getElementById("success");
 
-const count =
-  document.getElementById("count");
-
-
-// =====================================================
-// Show saved local count
-// =====================================================
-
-count.textContent =
-  localStorage.getItem(COUNT_KEY) || "0";
+const countElement =
+document.getElementById("count");
 
 
-// =====================================================
-// Allow only one signature on this browser/device
-// =====================================================
+/* =========================
+   SUPABASE HEADERS
+========================= */
 
-if(localStorage.getItem(SIGNED_KEY) === "true"){
+function supabaseHeaders(){
 
-  button.disabled = true;
+return {
+  "apikey":SUPABASE_PUBLISHABLE_KEY,
+  "Authorization":
+    "Bearer " + SUPABASE_PUBLISHABLE_KEY,
+  "Content-Type":"application/json"
+};
 
-  button.textContent =
-    "Already signed ✓";
-
-  success.textContent =
-    "You have already signed this petition on this device. 🏉";
-
-  success.style.display =
-    "block";
 }
 
 
-// =====================================================
-// Petition submission
-// =====================================================
+/* =========================
+   LOAD SHARED COUNT
+========================= */
 
-form.addEventListener("submit", async e => {
+async function loadCount(){
 
-  e.preventDefault();
+try{
 
+const response = await fetch(
+SUPABASE_URL +
+"/rest/v1/petition_stats?id=eq.1&select=count",
+{
+  method:"GET",
+  headers:supabaseHeaders()
+}
+);
 
-  // Check if this device has already signed
-  if(localStorage.getItem(SIGNED_KEY) === "true"){
+if(!response.ok){
 
-    success.textContent =
-      "You have already signed this petition on this device. 🏉";
+throw new Error("Could not load count");
 
-    success.style.display =
-      "block";
+}
 
-    return;
-  }
+const data = await response.json();
 
+if(data.length > 0){
 
-  // Get form values
-  const name =
-    document.getElementById("name").value.trim();
+countElement.textContent =
+Number(data[0].count).toLocaleString();
 
-  const reason =
-    document.getElementById("reason").value.trim();
+}else{
 
-  const website =
-    document.getElementById("website").value.trim();
+countElement.textContent = "0";
 
+}
 
-  // Anti-spam check
-  if(website) return;
+}catch(error){
 
+console.error(error);
 
-  // Name is required
-  if(!name) return;
+countElement.textContent = "0";
 
+}
 
-  // Prevent accidental double submission
-  if(sessionStorage.getItem(SUBMIT_LOCK_KEY) === "true"){
-    return;
-  }
+}
 
-  sessionStorage.setItem(
-    SUBMIT_LOCK_KEY,
-    "true"
-  );
 
+/* =========================
+   ADD ONE SIGNATURE
+========================= */
 
-  // Make sure Formspree is configured
-  if(FORMSPREE_ENDPOINT.includes("YOUR_FORM_ID")){
+async function addSignature(){
 
-    alert(
-      "The petition form is almost ready! Add your Formspree form ID in the code first."
-    );
+const response = await fetch(
+SUPABASE_URL +
+"/rest/v1/rpc/add_petition_signature",
+{
+  method:"POST",
+  headers:supabaseHeaders(),
+  body:"{}"
+}
+);
 
-    sessionStorage.removeItem(
-      SUBMIT_LOCK_KEY
-    );
+if(!response.ok){
 
-    return;
-  }
+throw new Error("Could not update signature count");
 
+}
 
-  // Disable button while submitting
-  button.disabled = true;
+const newCount = await response.json();
 
-  button.textContent =
-    "Submitting…";
+countElement.textContent =
+Number(newCount).toLocaleString();
 
+}
 
-  try{
 
-    const response =
-      await fetch(FORMSPREE_ENDPOINT, {
+/* =========================
+   CHECK IF ALREADY SIGNED
+========================= */
 
-        method:"POST",
+function alreadySigned(){
 
-        headers:{
-          "Accept":"application/json",
-          "Content-Type":"application/json"
-        },
+return localStorage.getItem(SIGNED_KEY) === "true";
 
-        body:JSON.stringify({
+}
 
-          name:name,
 
-          reason:reason,
+/* =========================
+   SHOW ALREADY SIGNED
+========================= */
 
-          petition:
-            "Gold Coast Titans — Round 27, 2026",
+function showAlreadySigned(){
 
-          _subject:
-            "New Titans Round 27 petition signature",
+button.disabled = true;
 
-          anti_spam:
-            "passed"
+button.textContent =
+"✅ YOU HAVE ALREADY SIGNED";
 
-        })
+success.textContent =
+"You have already signed this petition on this device. 🏉";
 
-      });
+success.style.display =
+"block";
 
+}
 
-    // Check if submission worked
-    if(!response.ok){
 
-      throw new Error(
-        "Submission failed"
-      );
+/* =========================
+   PETITION SUBMISSION
+========================= */
 
-    }
+form.addEventListener("submit",async e=>{
 
+e.preventDefault();
 
-    // Mark this browser/device as signed
-    localStorage.setItem(
-      SIGNED_KEY,
-      "true"
-    );
 
+/* Stop repeat signatures */
 
-    // Increase local counter
-    const newCount =
-      parseInt(
-        localStorage.getItem(COUNT_KEY) || "0",
-        10
-      ) + 1;
+if(alreadySigned()){
 
+showAlreadySigned();
 
-    localStorage.setItem(
-      COUNT_KEY,
-      String(newCount)
-    );
+return;
 
+}
 
-    count.textContent =
-      String(newCount);
 
+const name =
+document.getElementById("name").value.trim();
 
-    // Clear form
-    form.reset();
+const reason =
+document.getElementById("reason").value.trim();
 
 
-    // Show success
-    success.textContent =
-      "You're signed! 🏉 Up the Titans!";
+if(!name){
 
-    success.style.display =
-      "block";
+return;
 
+}
 
-    button.textContent =
-      "Already signed ✓";
 
+button.disabled = true;
 
-  }catch(error){
+button.textContent =
+"Submitting…";
 
-    // Allow another attempt if submission failed
-    sessionStorage.removeItem(
-      SUBMIT_LOCK_KEY
-    );
 
-    alert(
-      "Sorry — your signature could not be submitted. Please try again."
-    );
+try{
 
-  }finally{
 
-    // Keep button locked if successfully signed
-    if(localStorage.getItem(SIGNED_KEY) === "true"){
+/* -------------------------
+   Send to Formspree
+------------------------- */
 
-      button.disabled = true;
+const response =
+await fetch(FORMSPREE_ENDPOINT,{
 
-      button.textContent =
-        "Already signed ✓";
+method:"POST",
 
-    }else{
+headers:{
+  "Accept":"application/json",
+  "Content-Type":"application/json"
+},
 
-      button.disabled = false;
+body:JSON.stringify({
 
-      button.textContent =
-        "🏉 I THINK THE TITANS WON!";
+name:name,
 
-    }
+reason:reason,
 
-  }
+petition:
+"Gold Coast Titans — Round 27, 2026",
+
+_subject:
+"New Titans Round 27 petition signature"
+
+})
 
 });
 
 
-// =====================================================
-// Share button
-// =====================================================
+if(!response.ok){
+
+throw new Error(
+"Formspree submission failed"
+);
+
+}
+
+
+/* -------------------------
+   Update shared Supabase count
+------------------------- */
+
+await addSignature();
+
+
+/* -------------------------
+   Remember this device
+------------------------- */
+
+localStorage.setItem(
+SIGNED_KEY,
+"true"
+);
+
+
+/* -------------------------
+   Success
+------------------------- */
+
+form.reset();
+
+success.textContent =
+"You're signed! 🏉 Up the Titans!";
+
+success.style.display =
+"block";
+
+button.textContent =
+"✅ YOU HAVE SIGNED";
+
+
+button.disabled = true;
+
+
+}catch(error){
+
+console.error(error);
+
+alert(
+"Sorry — your signature could not be submitted. Please try again."
+);
+
+button.disabled = false;
+
+button.textContent =
+"🏉 I THINK THE TITANS WON!";
+
+}
+
+});
+
+
+/* =========================
+   SHARE BUTTON
+========================= */
 
 document
-  .getElementById("shareBtn")
-  .addEventListener("click", async () => {
+.getElementById("shareBtn")
+.addEventListener("click",async()=>{
 
-    if(navigator.share){
+if(navigator.share){
 
-      await navigator.share({
+try{
 
-        title:
-          "Did the Titans Win? — Round 27, 2026",
+await navigator.share({
 
-        text:
-          "Sign if you think the Gold Coast Titans won against the Dolphins!",
+title:
+"Did the Titans Win? — Round 27, 2026",
 
-        url:
-          location.href
+text:
+"Sign if you think the Gold Coast Titans won against the Dolphins!",
 
-      });
+url:
+location.href
 
-    }else{
+});
 
-      try{
+}catch(error){
 
-        await navigator.clipboard.writeText(
-          location.href
-        );
+console.log(error);
 
-        alert(
-          "Petition link copied!"
-        );
+}
 
-      }catch(e){
+}else{
 
-        alert(
-          "Copy the page link from your browser to share it."
-        );
+try{
 
-      }
+await navigator.clipboard.writeText(
+location.href
+);
 
-    }
+alert("Petition link copied!");
 
-  });
+}catch(error){
+
+alert(
+"Copy the page link from your browser to share it."
+);
+
+}
+
+}
+
+});
+
+
+/* =========================
+   STARTUP
+========================= */
+
+loadCount();
+
+
+if(alreadySigned()){
+
+showAlreadySigned();
+
+}
 
 </script>
 
